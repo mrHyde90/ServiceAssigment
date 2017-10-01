@@ -9,6 +9,7 @@ import {CounterService} from '../counter.service';
 })
 export class ActiveUsersComponent implements OnInit{
 	users:string[];
+  activeAction:number;
   @Output() activeUserEvent = new EventEmitter<void>();
 
 	constructor(private usersService: UsersService, private counterService: CounterService){}
@@ -21,11 +22,14 @@ export class ActiveUsersComponent implements OnInit{
 
   ngOnInit(){
     this.users = this.usersService.activeUsers;
+    this.activeAction = this.counterService.activeAction;
   }
 
   onSetToInactive(id:number){
   	this.usersService.onInactiveUser(id);
     this.counterService.updateCounter(this.usersService.inactiveUsers.length, this.usersService.activeUsers.length );
+    this.counterService.activeAction = this.counterService.activeAction + 1;
+    this.activeAction = this.counterService.activeAction;
     this.activeUserEvent.emit();
   }
 }
